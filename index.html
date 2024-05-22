@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White Sale</title>
+    <meta name="title" content="White List">
+
+    <link rel="shortcut icon" href="assets/images/logo/logo2.png" type="image/x-icon">
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/fairlaunchabi.js"></script>
+    <script src="./assets/js/privateabi.js"></script>
+    <script src="./assets/js/tokenabi.js"></script>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<style>
+    .banner-container {
+        width: 100%;
+        height: 100px;
+        max-height: 100px; /* Ensures the height does not exceed 100px */
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+        border: 3px solid rgb(100, 100, 5);
+        border-radius: 15px;
+    }
+    
+    .banner-container a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .banner-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 1s ease-in-out;
+        border-radius: 15px;
+    }
+
+    .banner-container img.hidden {
+        opacity: 0;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+        .banner-container {
+            max-height: 40px; /* Reduces height for smaller screens */
+            border-radius: 10px;
+        }
+
+        .banner-container img {
+            border-radius: 10px;
+        }
+    }
+</style>
+
+<script>
+    const web3 = new Web3(window.ethereum);
+    async function connectWallet() {
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const connectedAddress = accounts[0];
+            $('#connectWalletButton').text('Connected');
+            $('#walletAddress').text('Connected Wallet: ' + connectedAddress);
+            $('#buybtn').show();
+        } catch (error) {
+            console.error('Error connecting wallet:', error);
+            alert('Error connecting wallet. Please try again.');
+        }
+    }
+
+    function onload() {
+        $('#claimbtn').hide();
+        $('#finalizebtn').hide();
+        $('#withdrawbtn').hide();
+        $('#enableClaim').hide();
+        $('#buybtn').hide();
+    }
+
+    let currentImageIndex = 0;
+    const images = ['assets/images/banner1.jpg', 'assets/images/970x90 (1).gif', 'assets/images/970x90.gif'];
+
+    function rotateBanner() {
+        const bannerImages = document.querySelectorAll('.banner-container img');
+        bannerImages[currentImageIndex].classList.add('hidden');
+        currentImageIndex = (currentImageIndex + 1) % bannerImages.length;
+        bannerImages[currentImageIndex].classList.remove('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setInterval(rotateBanner, 4000);
+    });
+
+</script>
+
+<body onload="getFairLaunches()">
+    <div class="preloader">
+        <div class="preloader__inner">
+            <div class="preloader__icon">
+            </div>
+        </div>
+    </div>
+
+    <header class="header-section">
+        <div class="container">            
+            <div class="header-holder">
+                <div class="header-primary d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="brand-logo d-none d-lg-inline-block">
+                        <div class="logo">
+                            <a href="index.html">
+                                <img src="assets/images/logo/logo2.png" alt="logo" style="width: 110px; height: auto;">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-wrapper justify-content-lg-end">
+                        <div class="mobile-logo d-lg-none">
+                            <a href="index.html"><img src="assets/images/logo/logo2.png" alt="logo"></a>
+                        </div>
+                        <div class="menu-area">
+                            <ul class="menu">
+                                <li><a href="index.html">Home</a></li>
+                            </ul>
+                            <ul class="menu">
+                                <li><a href="create.html">Create</a></li>
+                            </ul>
+                            <ul class="menu">
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                            <ul class="menu">
+                                <li><a href="adm.html">adm</a></li>
+                            </ul>
+                            <button class="wallet-btn" onclick="connectWallet()" id="connectWalletButton">
+                                <span>Connect
+                                </span> <i class="fa-solid fa-wallet"></i></button>
+
+                            <div class="header-bar d-lg-none">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-container">
+                <a href="#" target="_blank">
+                    <img src="assets/images/pug1bnn.jpg" alt="Banner 2" class="hidden" >
+                </a>
+                <a href="#" target="_blank">
+                    <img src="assets/images/wsale.gif" alt="Banner 3" class="hidden" >
+                </a>
+                <a href="#" target="_blank">
+                    <img src="assets/images/gringa1.jpg" alt="Banner 4" class="hidden" >
+                </a>
+                <a href="#" target="_blank">
+                    <img src="assets/images/v1.gif" alt="Banner 4" class="hidden" >
+                </a>
+                <a href="#" target="_blank">
+                    <img src="assets/images/v2.gif" alt="Banner 4" class="hidden" >
+                </a>
+            </div>
+            
+        </div>
+    </header>
+
+    <section class="project padding-top padding-bottom">
+        <div class="container">
+            <div id="fair-launch-container" class="row">
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const fairLaunchFactoryAddress1 = "0x8E39c9BD45A6b12Ac8616d3c959b09c65d4097B4";
+        const fairLaunchFactoryContract1 = new web3.eth.Contract(fairLaunchFactoryABI, fairLaunchFactoryAddress1);
+
+        async function getFairLaunches() {
+            const getLaunchesCount = await fairLaunchFactoryContract1.methods.getFairLaunchCount().call();
+
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            for (let i = getLaunchesCount - 1; i >= 0; i--) {
+                const fairLaunch = await fairLaunchFactoryContract1.methods.fairLaunches(i).call();
+
+                const number = i;
+
+                const container = document.getElementById('fair-launch-container');
+                const launchElement = document.createElement('div');
+                launchElement.classList.add('col-lg-4', 'col-sm-4');
+                const fairadd = fairLaunch.fairLaunchAddress;
+
+                const fairLaunchContract = new web3.eth.Contract(privateabi, fairadd);
+                const tokenca = await fairLaunchContract.methods.token().call();
+
+                const tokenContract = new web3.eth.Contract(tokenabi, tokenca);
+
+                const Owner = fairLaunch.owner;
+
+                const status = await fairLaunchContract.methods.getStatus().call();
+
+                const tokenperbnb = await fairLaunchContract.methods.tokenperBNB().call();
+                console.log(tokenperbnb);
+
+                const decimals = await tokenContract.methods.decimals().call();
+                console.log(decimals);
+
+                const contributions = await fairLaunchContract.methods.contributions(account).call();
+                console.log(contributions);
+                const contrib = contributions / 1e18 + ' BNB';
+
+                const tokenperbnb2 = (tokenperbnb / Math.pow(10, decimals)).toLocaleString() + ' Tokens';
+                console.log(tokenperbnb2);
+
+                const maxbuy = await fairLaunchContract.methods.maxbuy().call();
+                const maxbuys = maxbuy / 1e18 + ' BNB';
+
+                const minbuy = await fairLaunchContract.methods.minbuy().call();
+
+                const startTime = await fairLaunchContract.methods.startTime().call();
+
+                const picture = await fairLaunchContract.methods.picture().call();
+
+                const desc = await fairLaunchContract.methods.description().call();
+
+                const hardcap = await fairLaunchContract.methods.hardcap().call();
+                const hardcap2 = hardcap + ' BNB';
+
+                const saled = await fairLaunchContract.methods.totalContributed().call();
+                const Min = 0;
+                const minbuyvalue = minbuy / 1e18;
+                const minbuyFinal = minbuyvalue.toFixed(3);
+                const minbuyEnd = 0.001;
+
+                if (minbuyFinal < minbuyEnd) {
+                    var minbuys = minbuyEnd + ' BNB';
+                } else {
+                    var minbuys = minbuyFinal + 'BNB';
+                }
+                launchElement.classList.add('col-lg-4', 'col-sm-4', 'mb-4');
+                launchElement.innerHTML = `
+                    <div class="project__item  mb-3">
+                        <div class="project__item-inner">
+                            <div class="project__item-thumb">
+                                <a href="#"><img src="${picture}" alt="author image"></a>
+                            </div>
+                            <div class="project__item-content">
+                                <div class="project__item-author">
+                                    <h4>${fairLaunch.name}</h4>
+                                </div>
+                                <div class="project__item-middle">
+                                    <ul class="project__infolist">
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Hard Cap:</p>
+                                            <p id="hardcap" class="project__infolist-data">${hardcap2}</p>
+                                        </li>
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Tokens per BNB</p>
+                                            <p id="TokensperBNB" class="project__infolist-data">${tokenperbnb2}</p>
+                                        </li>
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Max-buy</p>
+                                            <p id="Maxbuy" class="project__infolist-data">${maxbuys}</p>
+                                        </li>
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Min-buy</p>
+                                            <p id="Minbuy" class="project__infolist-data">${minbuys}</p>
+                                        </li>
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Description</p>
+                                            <p id="desc" class="project__infolist-data">${desc}</p>
+                                        </li>
+                                    </ul>
+                                    <ul class="project__infolist">
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Your Contributions:</p>
+                                            <p id="buyed" class="project__infolist-data">${contrib}</p>
+                                        </li>
+                                    </ul>
+                                    <ul class="project__infolist">
+                                        <li class="project__infolist-item">
+                                            <p class="project__infolist-name">Status:</p>
+                                            <p id="status" class="project__infolist-data">${status}</p>
+                                        </li>
+                                    </ul>
+                                    <div class="project__item-amount">
+                                        <p>Saled</p>
+                                        <h6><span id="saled">${saled / 1e18}</span> /
+                                            <span id="hardcap2">${hardcap + '_BNB'}</span>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <label for="bnbAmount${number}">BNB Amount:</label>
+                                <input type="text" id="bnbAmount${number}" class="form-control2" required pattern="[0-9]+(\.[0-9]+)?" title="Enter a valid BNB Amount"><br>
+                                <div class="project__item-bottom mb-3" id="buybtn${number}">
+                                    <button class="default-btn default-btn col-12" onclick="contributeToLaunch('${fairLaunch.fairLaunchAddress}', ${number})">Buy</button>
+                                </div>
+                                <div id="enableClaim${number}" class="project__item-bottom mb-3">
+                                    <button class="default-btn default-btn col-12" onclick="enableClaim('${fairLaunch.fairLaunchAddress}', ${number})">Enable Claim</button>
+                                </div>
+                                <div id="finalizebtn${number}" class="project__item-bottom mb-3">
+                                    <button class="default-btn default-btn col-12" onclick="finalizeLaunch('${fairLaunch.fairLaunchAddress}', ${number})">Finalize</button>
+                                </div>
+                                <div id="withdrawbtn${number}" class="project__item-bottom mb-3">
+                                    <button class="default-btn default-btn col-12" onclick="withdrawLaunch('${fairLaunch.fairLaunchAddress}', ${number})">Withidraw</button>
+                                </div>
+                                <div class="project__item-bottom mb-3" id="claimbtn${number}">
+                                    <button class="default-btn default-btn col-12" onclick="claimTokens('${fairLaunch.fairLaunchAddress}', ${number})">Claim</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(launchElement);
+
+                if (status == "Finalized") {
+                    $('#claimbtn' + number).show();
+                    $('#buybtn' + number).hide();
+                }
+
+                if (status == "In Progress") {
+                    $('#claimbtn' + number).hide();
+                    $('#buybtn' + number).show();
+                }
+
+                if (status == "Upcoming") {
+                    $('#claimbtn' + number).hide();
+                    $('#buybtn' + number).hide();
+                }
+
+                if (Owner == account) {
+                    $('#finalizebtn' + number).show();
+                    $('#enableClaim' + number).show();
+                    $('#withdrawbtn' + number).show();
+                } else {
+                    $('#finalizebtn' + number).hide();
+                    $('#enableClaim' + number).hide();
+                    $('#withdrawbtn' + number).hide();
+                }
+            }
+        }
+
+        async function contributeToLaunch(fairLaunchAddress, number) {
+            const bnbAmountInput = document.getElementById(`bnbAmount${number}`);
+            const bnbAmount = bnbAmountInput.value;
+            const valueToSend = web3.utils.toWei(bnbAmount, 'ether');
+
+            const fairLaunchContract = new web3.eth.Contract(privateabi, fairLaunchAddress);
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            try {
+                const receipt = await fairLaunchContract.methods.contributesend(valueToSend, account).send({ from: account, value: valueToSend });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Contribution Successful',
+                    text: `Transaction successful! Transaction hash: ${receipt.transactionHash}`,
+                });
+            } catch (error) {
+                console.error('Error contributing:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while contributing. Please try again.',
+                });
+            }
+        }
+
+        async function finalizeLaunch(fairLaunchAddress, number) {
+            const fairLaunchContract = new web3.eth.Contract(privateabi, fairLaunchAddress);
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            try {
+                await fairLaunchContract.methods.finalizeNosend().send({ from: account });
+            } catch (error) {
+                console.error('Error finalizing:', error);
+            }
+        }
+
+        async function withdrawLaunch(fairLaunchAddress, number) {
+            const fairLaunchContract = new web3.eth.Contract(privateabi, fairLaunchAddress);
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            try {
+                await fairLaunchContract.methods.withdrawtokensnotsale().send({ from: account });
+            } catch (error) {
+                console.error('Error withdraw:', error);
+            }
+        }
+
+        async function enableClaim(fairLaunchAddress, number) {
+            const fairLaunchContract = new web3.eth.Contract(privateabi, fairLaunchAddress);
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            try {
+                await fairLaunchContract.methods.enableClaim().send({ from: account });
+            } catch (error) {
+                console.error('Error enabling claim:', error);
+            }
+        }
+
+        async function claimTokens(fairLaunchAddress, number) {
+            const fairLaunchContract = new web3.eth.Contract(privateabi, fairLaunchAddress);
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            try {
+                const receipt = await fairLaunchContract.methods.claimtokens().send({ from: account });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tokens Claimed',
+                    text: `Transaction successful! Transaction hash: ${receipt.transactionHash}`,
+                });
+            } catch (error) {
+                console.error('Error claiming tokens:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while claiming the tokens. Please try again.',
+                });
+            }
+        }
+    </script>
+
+    <a href="#" class="scrollToTop"><i class="fa-solid fa-arrow-up-from-bracket"></i></a>
+    
+    <footer class="footer-section">
+        <div class="container">
+            <p class="disclaimer-text">Disclaimer: WhiteSale will never endorse or encourage that you invest in any of the projects listed and therefore, accept no liability for any loss occasioned. It is the user(s) responsibility to do their own research and seek financial advice from a professional. More information about (DYOR) can be found via Binance Academy.</p>
+        </div>
+    </footer>
+
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/all.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <script src="assets/js/aos.js"></script>
+    <script src="assets/js/purecounter.js"></script>
+    <script src="assets/js/custom.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White List</title>
+    <meta name="title" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="assets/images/logo/logo2.png" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+    <script src="./assets/js/fairlaunchabi.js"></script>
+    <script src="./assets/js/privateabi.js"></script>
+    <script src="./assets/js/tokenabi.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<script>
+    const web3 = new Web3(window.ethereum);
+    console.log('Web3 instance:', web3);
+
+    async function connectWallet() {
+        try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            console.log('Wallet connected successfully!');
+            $('#connectWalletButton').text('Connected');
+            $('#AppBtn').show();
+        } catch (error) {
+            console.error('Error connecting wallet:', error);
+            alert('Error connecting wallet. Please try again.');
+        }
+    }
+
+    const fairLaunchFactoryAddress = "0x8E39c9BD45A6b12Ac8616d3c959b09c65d4097B4";
+    console.log('FairLaunchFactory Address:', fairLaunchFactoryAddress);
+
+    const fairLaunchFactoryContract = new web3.eth.Contract(fairLaunchFactoryABI, fairLaunchFactoryAddress);
+    console.log('FairLaunchFactory Contract:', fairLaunchFactoryContract);
+
+    function onload() {
+        $('#AppBtn').hide();
+        $('#createbtn').hide();
+        $('#finalized').hide();
+    }
+
+    async function approve() {
+        const tokenAddress = document.getElementById('tokenAddress').value;
+        console.log('Token Address:', tokenAddress);
+        const hardcap = document.getElementById('hardcap').value;
+        const tokenPerBNB = document.getElementById('tokenPerBNB').value;
+        console.log('Tokens per BNB:', tokenPerBNB);
+
+        const AppValue = hardcap * tokenPerBNB;
+        console.log('VALUE:', AppValue);
+
+        try {
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+            console.log('User Account:', account);
+
+            const tokenContract = new web3.eth.Contract(tokenabi, tokenAddress);
+            const TestApprove = await tokenContract.methods.allowance(
+                account, fairLaunchFactoryAddress
+            ).call();
+            console.log('Approval Transaction Hash:', TestApprove);
+
+            if (TestApprove > AppValue) {
+                $('#AppBtn').hide();
+                $('#createbtn').show();
+            } else {
+                const approveTx = await tokenContract.methods.approve(
+                    fairLaunchFactoryAddress, BigInt(AppValue)
+                ).send({ from: account });
+                console.log('Approval Transaction Hash:', approveTx.transactionHash);
+
+                $('#AppBtn').hide();
+                $('#createbtn').show();
+            }
+        } catch (error) {
+            console.error('Error Approve:', error);
+            alert('Error Approve. Please try again.');
+        }
+    }
+    
+    async function handleFormSubmit() {
+        console.log('Form submission initiated');
+
+        const tokenAddress = document.getElementById('tokenAddress').value;
+        console.log('Token Address:', tokenAddress);
+
+        const startTimeInput = document.getElementById('startTime').value;
+        const startTime = Math.floor(new Date(startTimeInput).getTime() / 1000);
+        console.log('Start Time (UNIX Timestamp):', startTime);
+
+        const minBuy = (document.getElementById('minBuy').value) * 1e18;
+        console.log('Minimum Buy:', minBuy);
+
+        const maxBuy = (document.getElementById('maxBuy').value) * 1e18;
+        console.log('Maximum Buy:', maxBuy);
+
+        const hardcap = document.getElementById('hardcap').value;
+        console.log('Hardcap:', hardcap);
+
+        const tokenPerBNB = document.getElementById('tokenPerBNB').value;
+        console.log('Tokens per BNB:', tokenPerBNB);
+
+        const name = document.getElementById('name').value;
+        console.log('Name:', name);
+
+        const description = document.getElementById('description').value;
+        console.log('Description:', description);
+
+        const picture = document.getElementById('picture').value;
+        console.log('Picture URL:', picture);
+
+        try {
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+
+            const tokenContract = new web3.eth.Contract(tokenabi, tokenAddress);
+
+            console.log('tokenContract:', tokenContract);
+
+            // Obter a taxa de criação do contrato
+            const createFee = await fairLaunchFactoryContract.methods.createFee().call();
+            console.log('Creation Fee (Wei):', createFee);
+
+            const tx = await fairLaunchFactoryContract.methods.newFairLaunch(
+                tokenAddress,
+                startTime,
+                BigInt(minBuy),
+                BigInt(maxBuy),
+                hardcap,
+                BigInt(tokenPerBNB),
+                name,
+                description,
+                picture
+            ).send({ 
+                from: account, value: createFee
+            });
+
+            console.log('Transaction Receipt:', tx);
+
+            if (tx.status) {
+                console.log(tx.events.FairLaunchCreated.returnValues[0])
+                const contractAddress = tx.events.FairLaunchCreated.returnValues[0];
+                alert('PrivateSale created successfully!');
+                $('#formulario').hide();
+                $('#finalized').show();
+            } else {
+                throw new Error('Transaction failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error creating PrivateSale:', error);
+            alert('Error creating PrivateSale. Please try again.');
+        }
+    }
+
+</script>
+
+<body onload="onload()">
+
+    <!-- preloader start here -->
+    <div class="preloader">
+        <div class="preloader__inner">
+            <div class="preloader__icon">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- preloader ending here -->
+
+    <!-- ==========Header Section Starts Here========== -->
+    <header class="header-section">
+        <div class="container">
+            <div class="header-holder">
+                <div class="header-primary d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="brand-logo d-none d-lg-inline-block">
+                        <div class="logo">
+                            <a href="index.html">
+                                <img src="assets/images/logo/logo2.png" alt="logo" style="width: 120px; height: auto;">
+                            </a>
+                        </div>                            
+                    </div>
+
+                    <div class="header-wrapper justify-content-lg-end">
+                        <div class="mobile-logo d-lg-none">
+                            <a href="index.html"><img src="assets/images/logo/logo2.png" alt="logo"></a>
+                        </div>
+                        <div class="menu-area">
+                            <ul class="menu">
+                                <li><a href="index.html">Home</a></li>
+                            </ul>
+                            <ul class="menu">
+                                <li><a href="create.html">Create</a></li>
+                            </ul>
+                            <ul class="menu">
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                            <button class="wallet-btn" onclick="connectWallet()" id="connectWalletButton">
+                                <span>Connect
+                                </span> <i class="fa-solid fa-wallet"></i></button>
+                            <div class="header-bar d-lg-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <section class="apply-project padding-top padding-bottom">
+        <div class="container">
+            <div class="section-header section-header--middle">
+                <div class="section-header__content">
+                    <div class="section-header__titlebar">
+                        <h2 class="section__header__title">Fill in the information to create your white list</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apply-project__wrapper" id="formulario">
+                <form action="#" class="apply-project__form">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10 col-md-8">
+                            <!-- ========= Contact Info============= -->
+                            <div class="apply-project__block mb-4">
+                                <div class="apply-project__block-header">
+                                    <h4>Contract Information</h4>
+                                </div>
+                                <form id="createPrivateSaleForm" class="apply-project__block-content">
+
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="tokenAddress" required
+                                            placeholder="Place Token Address">
+                                        <label for="tokenAddress">Token Address:</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="datetime-local" class="form-control" id="startTime" required>
+                                        <label for="startTime">Start Time:</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="minBuy" required pattern="[0-9]+(\.[0-9]+)?"
+                                            placeholder="enter the minimum quantity with decimals">
+                                        <label for="minBuy">Minimum Buy:</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+
+                                        <input type="text" class="form-control " id="maxBuy" required  pattern="[0-9]+(\.[0-9]+)?"
+                                            placeholder="enter the maximum quantity with decimals">
+                                        <label for="maxBuy">Maximum Buy:</label>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="hardcap" required>
+                                        <label for="hardcap">Hardcap in BNB:</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="tokenPerBNB" required>
+                                        <label for="tokenPerBNB">Tokens per BNB:</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="name" required>
+                                        <label for="name">Name:</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="picture" required>
+                                        <label for="picture">Picture URL:</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="text"  id="description" class="form-control" required maxlength="200">
+                                        <label for="description">Description:</label>
+                                    </div>
+                                    
+                                    <div class="text-center">
+                                        <button class="default-btn" onclick="handleFormSubmit()" id="createbtn"
+                                            type="submit">
+                                            <span>Submit Project</span> </button>
+                                        <button class="default-btn" onclick="approve()" id="AppBtn">
+                                            <span>Approve</span> </button>
+                                    </div>
+                                </form>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="finalized" class="newsletter  padding-bottom" data-aos="fade-up" data-aos-duration="1000">
+        <div class="container">
+            <div class="newsletter__wrapper newsletter__wrapper--bg-shapes">
+                <div class="text-center">
+                    <a class="default-btn" href="index.html">
+                        <span>Go to Sales</span>                        
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-section">
+        <div class="container">
+            <p class="disclaimer-text">Disclaimer: WhiteSale will never endorse or encourage that you invest in any of the projects listed and therefore, accept no liability for any loss occasioned. It is the user(s) responsibility to do their own research and seek financial advice from a professional. More information about (DYOR) can be found via Binance Academy.</p>
+        </div>
+    </footer>
+
+    <a href="#" class="scrollToTop"><i class="fa-solid fa-arrow-up-from-bracket"></i></a>
+
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="assets/js/all.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js"></script>
+    <script src="assets/js/aos.js"></script>
+    <script src="assets/js/purecounter.js"></script>
+    <script src="assets/js/custom.js"></script>
+</body>
+</html>

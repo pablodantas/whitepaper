@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel || WhiteSale</title>
+    <!-- Importando biblioteca SwalFire -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- Importando Web3.js -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+    <!-- Importando ABI -->
+    <script src="./assets/js/fairlaunchabi.js"></script>
+    <script src="./assets/js/privateabi.js"></script>
+    <!-- Importando jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Importando Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <div class="menu-area">
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+        </ul></div>
+
+<div class="container mt-5">
+    <h1 class="text-center">Admin Panel - WhiteSale</h1>
+
+    <div class="form-group mt-4">
+        <label for="newCreationFee">New Creation Fee (in BNB):</label>
+        <input type="text" class="form-control" id="newCreationFee" required pattern="[0-9]+(\.[0-9]+)?" placeholder="Enter new creation fee, e.g., 0.5">
+    </div>
+    <hr>
+    <button class="default-btn" onclick="changeCreationFee()">Change Fee</button>
+    <hr>
+    <div class="form-group mt-4">
+      </div>
+    <hr>    
+</div>
+
+<script>
+    // Inicializando o provedor Web3
+    const web3 = new Web3(window.ethereum);
+
+    // Definindo o endereço do contrato
+    const contractAddress = "0x8E39c9BD45A6b12Ac8616d3c959b09c65d4097B4";
+
+    // Instanciando o contrato
+    const contract = new web3.eth.Contract(fairLaunchFactoryABI, contractAddress);
+    // Instanciando o contrato
+    const contractprivate = new web3.eth.Contract(privateabi, contractAddress);
+
+    async function changeCreationFee() {
+        try {
+            // Obtendo a nova taxa de criação
+            const newFeeBNB = document.getElementById('newCreationFee').value;
+
+            // Verificando se o campo não está vazio e se é um número válido
+            if (newFeeBNB.trim() === '' || isNaN(newFeeBNB)) {
+                throw new Error('Invalid new creation fee. Please enter a valid number.');
+            }
+
+            // Convertendo a taxa de criação de BNB para Wei
+            const newFeeWei = web3.utils.toWei(newFeeBNB, 'ether');
+
+            // Fazendo a chamada para a função changeCreationFee do contrato
+            const accounts = await web3.eth.requestAccounts();
+            const account = accounts[0];
+            await contract.methods.changeCreationFee(newFeeWei).send({ from: account });
+
+            // Exibindo um pop-up de confirmação
+            Swal.fire({
+                icon: 'success',
+                title: 'Creation Fee Changed',
+                text: 'The creation fee has been changed successfully!',
+            });
+        } catch (error) {
+            // Exibindo um pop-up de erro, se houver algum problema
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'An error occurred while changing the creation fee. Please try again.',
+            });
+            console.error('Error changing creation fee:', error);
+        }
+    }
+
+</script>
+
+</body>
+</html>
