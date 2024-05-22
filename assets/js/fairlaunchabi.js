@@ -1,5 +1,84 @@
 var fairLaunchFactoryABI = [
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "creationfees",
+				"type": "uint256"
+			}
+		],
+		"name": "changeCreationFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "changeStatus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_tokenAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_startTime",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_minbuy",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_maxbuy",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_hardcap",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenperbnb",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_picture",
+				"type": "string"
+			}
+		],
+		"name": "newFairLaunch",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -30,53 +109,63 @@ var fairLaunchFactoryABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "PANCAKE_ROUTER_ADDRESS",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "adr",
+				"name": "fairLaunchAddress",
 				"type": "address"
 			}
 		],
-		"name": "Saledev",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "creationfees",
-				"type": "uint256"
-			}
-		],
-		"name": "changeCreationFee",
+		"name": "removeFairLaunch",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "changeStatus",
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_feereceiver",
+				"type": "address"
+			}
+		],
+		"name": "setfeereceiver",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "fairLaunchAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "newName",
+				"type": "string"
+			}
+		],
+		"name": "updateName",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "fairLaunchAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_newOwner",
+				"type": "address"
+			}
+		],
+		"name": "updateOwner",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -115,25 +204,6 @@ var fairLaunchFactoryABI = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "fairLaunchToIndex",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -222,6 +292,25 @@ var fairLaunchFactoryABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "fairLaunchToIndex",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "feereceiver",
 		"outputs": [
@@ -242,6 +331,25 @@ var fairLaunchFactoryABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "getFairLaunchesByOwner",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -289,117 +397,13 @@ var fairLaunchFactoryABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_owner",
-				"type": "address"
-			}
-		],
-		"name": "getFairLaunchesByOwner",
-		"outputs": [
-			{
-				"internalType": "address[]",
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_tokenAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_startTime",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_minbuy",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_maxbuy",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_hardcap",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenperbnb",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_picture",
-				"type": "string"
-			}
-		],
-		"name": "newFairLaunch",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_timelimit",
-				"type": "uint256"
-			}
-		],
-		"name": "setTimeLimt",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_feereceiver",
-				"type": "address"
-			}
-		],
-		"name": "setfeereceiver",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
-		"name": "timelimit",
+		"name": "PANCAKE_ROUTER_ADDRESS",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "address",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -409,36 +413,19 @@ var fairLaunchFactoryABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "fairLaunchAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "newName",
-				"type": "string"
-			}
-		],
-		"name": "updateName",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "fairLaunchAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_newOwner",
+				"name": "adr",
 				"type": "address"
 			}
 		],
-		"name": "updateOwner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "Saledev",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ];  

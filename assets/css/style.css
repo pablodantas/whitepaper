@@ -5182,6 +5182,60 @@ ol {
   box-shadow: 0 0 5px rgba(200, 206, 25, 0.719);
 }
 
+.wallet-address {
+  display: inline-block;
+  margin-left: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-right: 45px;
+  font-size: 18px;
+  color: #fff;
+}
+
+
+.banner-container {
+  width: 100%;
+  height: 100px;
+  max-height: 100px; /* Ensures the height does not exceed 100px */
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  border: 3px solid rgb(100, 100, 5);
+  border-radius: 15px;
+}
+
+.banner-container a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.banner-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 1s ease-in-out;
+  border-radius: 15px;
+}
+
+.banner-container img.hidden {
+  opacity: 0;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .banner-container {
+      max-height: 40px; /* Reduces height for smaller screens */
+      border-radius: 10px;
+  }
+
+  .banner-container img {
+      border-radius: 10px;
+  }
+}
+
 
 
 /*# sourceMappingURL=style.css.map */

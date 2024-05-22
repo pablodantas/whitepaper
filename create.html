@@ -36,7 +36,7 @@
         }
     }
 
-    const fairLaunchFactoryAddress = "0x8E39c9BD45A6b12Ac8616d3c959b09c65d4097B4";
+    const fairLaunchFactoryAddress = "0x42ca24d6928C9EBe8F030B7103f7Bfd9eE0b33a0";
     console.log('FairLaunchFactory Address:', fairLaunchFactoryAddress);
 
     const fairLaunchFactoryContract = new web3.eth.Contract(fairLaunchFactoryABI, fairLaunchFactoryAddress);
@@ -48,7 +48,9 @@
         $('#finalized').hide();
     }
 
-    async function approve() {
+    async function approve(event) {
+        event.preventDefault(); // Adiciona esta linha para evitar o comportamento padrão do formulário
+
         const tokenAddress = document.getElementById('tokenAddress').value;
         console.log('Token Address:', tokenAddress);
         const hardcap = document.getElementById('hardcap').value;
@@ -86,8 +88,10 @@
             alert('Error Approve. Please try again.');
         }
     }
-    
-    async function handleFormSubmit() {
+
+    async function handleFormSubmit(event) {
+        event.preventDefault(); // Adiciona esta linha para evitar o comportamento padrão do formulário
+
         console.log('Form submission initiated');
 
         const tokenAddress = document.getElementById('tokenAddress').value;
@@ -149,18 +153,17 @@
             if (tx.status) {
                 console.log(tx.events.FairLaunchCreated.returnValues[0])
                 const contractAddress = tx.events.FairLaunchCreated.returnValues[0];
-                alert('PrivateSale created successfully!');
+                alert('White List created successfully!');
                 $('#formulario').hide();
                 $('#finalized').show();
             } else {
                 throw new Error('Transaction failed. Please try again.');
             }
         } catch (error) {
-            console.error('Error creating PrivateSale:', error);
-            alert('Error creating PrivateSale. Please try again.');
+            console.error('Error creating White List:', error);
+            alert('Error creating White List. Please try again.');
         }
     }
-
 </script>
 
 <body onload="onload()">
@@ -283,10 +286,10 @@
                                     </div>
                                     
                                     <div class="text-center">
-                                        <button class="default-btn" onclick="handleFormSubmit()" id="createbtn"
+                                        <button class="default-btn" onclick="handleFormSubmit(event)" id="createbtn"
                                             type="submit">
                                             <span>Submit Project</span> </button>
-                                        <button class="default-btn" onclick="approve()" id="AppBtn">
+                                        <button class="default-btn" onclick="approve(event)" id="AppBtn">
                                             <span>Approve</span> </button>
                                     </div>
                                 </form>

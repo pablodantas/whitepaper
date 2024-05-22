@@ -22,77 +22,35 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
-<style>
-    .banner-container {
-        width: 100%;
-        height: 100px;
-        max-height: 100px; /* Ensures the height does not exceed 100px */
-        margin: 0 auto;
-        overflow: hidden;
-        position: relative;
-        border: 3px solid rgb(100, 100, 5);
-        border-radius: 15px;
-    }
-    
-    .banner-container a {
-        display: block;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
 
-    .banner-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: opacity 1s ease-in-out;
-        border-radius: 15px;
-    }
-
-    .banner-container img.hidden {
-        opacity: 0;
-    }
-
-    /* Mobile styles */
-    @media (max-width: 768px) {
-        .banner-container {
-            max-height: 40px; /* Reduces height for smaller screens */
-            border-radius: 10px;
-        }
-
-        .banner-container img {
-            border-radius: 10px;
-        }
-    }
-</style>
 
 <script>
     const web3 = new Web3(window.ethereum);
-    async function connectWallet() {
-        try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const connectedAddress = accounts[0];
-            $('#connectWalletButton').text('Connected');
-            $('#walletAddress').text('Connected Wallet: ' + connectedAddress);
-            $('#buybtn').show();
-        } catch (error) {
-            console.error('Error connecting wallet:', error);
-            alert('Error connecting wallet. Please try again.');
-        }
-    }
 
-    function onload() {
-        $('#claimbtn').hide();
-        $('#finalizebtn').hide();
-        $('#withdrawbtn').hide();
-        $('#enableClaim').hide();
-        $('#buybtn').hide();
+async function connectWallet() {
+    try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const connectedAddress = accounts[0];
+        $('#connectWalletButton').text('Connected');
+        $('#walletAddress').text('Connected Wallet: ' + connectedAddress);        
+        $('#walletAddressDisplay').text(connectedAddress.slice(0, 6) + '...' + connectedAddress.slice(-4)); // Display a shortened version
+        $('#buybtn').show();
+    } catch (error) {
+        console.error('Error connecting wallet:', error);
+        alert('Error connecting wallet. Please try again.');
     }
+}
+
+function onload() {
+    $('#claimbtn').hide();
+    $('#finalizebtn').hide();
+    $('#withdrawbtn').hide();
+    $('#enableClaim').hide();
+    $('#buybtn').hide();
+}
 
     let currentImageIndex = 0;
-    const images = ['assets/images/banner1.jpg', 'assets/images/970x90 (1).gif', 'assets/images/970x90.gif'];
+   // const images = ['assets/images/', 'assets/images/970x90 (1).gif', 'assets/images/970x90.gif'];
 
     function rotateBanner() {
         const bannerImages = document.querySelectorAll('.banner-container img');
@@ -102,7 +60,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        setInterval(rotateBanner, 4000);
+        setInterval(rotateBanner, 8000);
     });
 
 </script>
@@ -132,7 +90,8 @@
                         </div>
                         <div class="menu-area">
                             <ul class="menu">
-                                <li><a href="index.html">Home</a></li>
+                                <li><span id="walletAddressDisplay" class="wallet-address">Wallet Disconnected</span></li>                               
+                                <li><a href="index.html">Home</a></li>                                
                             </ul>
                             <ul class="menu">
                                 <li><a href="create.html">Create</a></li>
@@ -146,7 +105,7 @@
                             <button class="wallet-btn" onclick="connectWallet()" id="connectWalletButton">
                                 <span>Connect
                                 </span> <i class="fa-solid fa-wallet"></i></button>
-
+    
                             <div class="header-bar d-lg-none">
                                 <span></span>
                                 <span></span>
@@ -157,25 +116,30 @@
                 </div>
             </div>
             <div class="banner-container">
-                <a href="#" target="_blank">
+                <a href="#1" target="_blank">
+                    <img src="assets/images/babyvp1.jpg" alt="Banner 1" >
+                </a>
+                <a href="#2" target="_blank">
                     <img src="assets/images/pug1bnn.jpg" alt="Banner 2" class="hidden" >
                 </a>
-                <a href="#" target="_blank">
+                <a href="#3" target="_blank">
                     <img src="assets/images/wsale.gif" alt="Banner 3" class="hidden" >
                 </a>
-                <a href="#" target="_blank">
+                <a href="#4" target="_blank">
                     <img src="assets/images/gringa1.jpg" alt="Banner 4" class="hidden" >
                 </a>
-                <a href="#" target="_blank">
-                    <img src="assets/images/v1.gif" alt="Banner 4" class="hidden" >
+                <a href="#5" target="_blank">
+                    <img src="assets/images/VPbnn1.jpg" alt="Banner 4" class="hidden" >
+                </a>
+                <a href="#6" target="_blank">
+                    <img src="assets/images/loboBnn.gif" alt="Banner 4" class="hidden" >
                 </a>
                 <a href="#" target="_blank">
-                    <img src="assets/images/v2.gif" alt="Banner 4" class="hidden" >
+                    <img src="assets/images/wkbnn2.gif" alt="Banner 4" class="hidden" >
                 </a>
             </div>
-            
         </div>
-    </header>
+    </header>    
 
     <section class="project padding-top padding-bottom">
         <div class="container">
@@ -185,7 +149,7 @@
     </section>
 
     <script>
-        const fairLaunchFactoryAddress1 = "0x8E39c9BD45A6b12Ac8616d3c959b09c65d4097B4";
+        const fairLaunchFactoryAddress1 = "0x42ca24d6928C9EBe8F030B7103f7Bfd9eE0b33a0";
         const fairLaunchFactoryContract1 = new web3.eth.Contract(fairLaunchFactoryABI, fairLaunchFactoryAddress1);
 
         async function getFairLaunches() {
@@ -230,6 +194,7 @@
                 const maxbuys = maxbuy / 1e18 + ' BNB';
 
                 const minbuy = await fairLaunchContract.methods.minbuy().call();
+                const minbuys = minbuy / 1e18 + ' BNB';
 
                 const startTime = await fairLaunchContract.methods.startTime().call();
 
@@ -241,16 +206,18 @@
                 const hardcap2 = hardcap + ' BNB';
 
                 const saled = await fairLaunchContract.methods.totalContributed().call();
+                const saled2 = saled / 1e18 + ' BNB';
+
                 const Min = 0;
                 const minbuyvalue = minbuy / 1e18;
                 const minbuyFinal = minbuyvalue.toFixed(3);
                 const minbuyEnd = 0.001;
 
-                if (minbuyFinal < minbuyEnd) {
+               /* if (minbuyFinal < minbuyEnd) {
                     var minbuys = minbuyEnd + ' BNB';
                 } else {
                     var minbuys = minbuyFinal + 'BNB';
-                }
+                }*/
                 launchElement.classList.add('col-lg-4', 'col-sm-4', 'mb-4');
                 launchElement.innerHTML = `
                     <div class="project__item  mb-3">
@@ -299,8 +266,8 @@
                                     </ul>
                                     <div class="project__item-amount">
                                         <p>Saled</p>
-                                        <h6><span id="saled">${saled / 1e18}</span> /
-                                            <span id="hardcap2">${hardcap + '_BNB'}</span>
+                                        <h6><span id="saled">${saled2}</span> /
+                                            <span id="hardcap2">${hardcap2}</span>
                                         </h6>
                                     </div>
                                 </div>
@@ -444,9 +411,15 @@
     
     <footer class="footer-section">
         <div class="container">
-            <p class="disclaimer-text">Disclaimer: WhiteSale will never endorse or encourage that you invest in any of the projects listed and therefore, accept no liability for any loss occasioned. It is the user(s) responsibility to do their own research and seek financial advice from a professional. More information about (DYOR) can be found via Binance Academy.</p>
+            <p class="disclaimer-text">
+                Disclaimer: WhiteSale will never endorse or encourage that you invest in any of the projects listed and therefore, 
+                accept no liability for any loss occasioned. It is the user(s) responsibility to do their own research and seek 
+                financial advice from a professional. More information about (DYOR) can be found 
+                via <a href="https://academy.binance.com/en/glossary/do-your-own-research" target="_blank">Binance Academy</a>.
+            </p>
         </div>
     </footer>
+    
 
     <script src="jquery-3.7.1.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
